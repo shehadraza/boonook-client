@@ -2,11 +2,14 @@
 "use client";
 
 import Link from "next/link";
+import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Autoplay, Pagination, EffectFade } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 
 const slides = [
   {
@@ -22,49 +25,59 @@ const slides = [
   {
     title: "Return it when you are done",
     text: "See everything you borrowed in one place and give it back with one click.",
-    img: "https://images.unsplash.com/photo-1544716278-ca5e3f4ebdbc?auto=format&fit=crop&w=2000&q=85",
+    img: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=2000&q=85",
   },
 ];
 
 export default function HeroSlider() {
+  const swiperRef = useRef<SwiperType | null>(null);
+
   return (
-    <section>
+    <section className="hero-section">
       <Swiper
-        modules={[Autoplay, Pagination]}
+        modules={[Autoplay, Pagination, EffectFade]}
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
+        slidesPerView={1}
         loop
+        speed={1000}
         autoplay={{
-          delay: 5000,
+          delay: 4000,
           disableOnInteraction: false,
-          pauseOnMouseEnter: true,
+          pauseOnMouseEnter: false,
+          waitForTransition: true,
         }}
         pagination={{ clickable: true }}
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+          swiper.autoplay.start();
+        }}
+        onInit={(swiper) => {
+          swiper.autoplay.start();
+        }}
         className="hero-swiper"
       >
-        {slides.map((s) => (
-          <SwiperSlide key={s.title}>
-            <div
-              className="hero-slide"
-              style={{
-                backgroundImage: `
-                  linear-gradient(
-                    90deg,
-                    rgba(5,10,24,0.92) 0%,
-                    rgba(5,10,24,0.72) 45%,
-                    rgba(5,10,24,0.30) 100%
-                  ),
-                  url("${s.img}")
-                `,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            >
-              <div className="container-x py-16">
+        {slides.map((slide) => (
+          <SwiperSlide key={slide.title}>
+            <div className="hero-slide">
+              <img
+                src={slide.img}
+                alt={slide.title}
+                className="hero-background"
+                loading="eager"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+
+              <div className="hero-overlay" />
+
+              <div className="container-x hero-content">
                 <h1 className="section-title hero-title !text-[clamp(2.4rem,6vw,4rem)]">
-                  {s.title}
+                  {slide.title}
                 </h1>
 
-                <p className="hero-text">{s.text}</p>
+                <p className="hero-text">{slide.text}</p>
 
                 <Link href="/books" className="btn btn-primary mt-8">
                   Browse Books
