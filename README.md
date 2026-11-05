@@ -1,6 +1,6 @@
 # BookNook – A Small Online Library
 
-**Live site:** https://YOUR-VERCEL-LINK.vercel.app
+**Live site:** https://boonook-client.vercel.app
 
 BookNook is a small online library. Add a book, borrow a book, return a book.
 Readers can browse every book, add their own, borrow a book for 14 days and
@@ -42,7 +42,7 @@ return it when they are done.
 ## Run Locally
 
 ```bash
-git clone https://github.com/shehadraza/booknook-client.git
+git clone https://github.com/shehadraza/boonook-client.git
 cd booknook-client
 npm install
 npm run dev
@@ -63,4 +63,4 @@ GOOGLE_CLIENT_SECRET=
 ## Server
 
 The API lives in a separate repository:
-https://github.com/YOUR-USERNAME/booknook-server
+https://github.com/shehadraza/booknook-server
