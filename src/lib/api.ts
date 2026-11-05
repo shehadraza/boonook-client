@@ -1,6 +1,7 @@
 import { authClient } from "./auth-client";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+// Remove any trailing slash so "https://site.com/" and "https://site.com" both work
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(/\/+$/, "");
 
 export function errMsg(err: unknown) {
   return err instanceof Error ? err.message : "Something went wrong";
@@ -18,8 +19,9 @@ export async function apiFetch<T>(path: string, options: Options = {}): Promise<
     headers.Authorization = `Bearer ${data.token}`;
   }
 
-  const res = await fetch(`${API_URL}${path}`, { ...rest, headers, cache: "no-store" });
+  const url = `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  const res = await fetch(url, { ...rest, headers, cache: "no-store" });
   const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(json.message || "Request failed");
+  if (!res.ok) throw new Error(json.message || `Request failed (${res.status})`);
   return json as T;
 }
